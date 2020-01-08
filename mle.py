@@ -55,6 +55,17 @@ print("{:.4f}".format(lambda_estimate))
 
 
 intensity = 0.1
+fig3, ax3 = plt.subplots()
+ax3.plot(t, np.vectorize(lambda l: 1.0 - math.exp((-l * intensity)))(t), label='model')
 for n in range(1, 7):
     size = pow(10, n)
-    print(size / np.sum(generate(intensity, size)))
+    estimator = size / np.sum(generate(intensity, size))
+    print(estimator)
+    ax3.plot(t, np.vectorize(lambda l: 1.0 - math.exp((-l * estimator)))(t), label=f'samples={size}')
+
+ax3.set(xlabel='x', ylabel='P(X ≤ x)', title='Inferred Cumulative Distribution')
+ax3.set_xlim([x.min(), x.max()])
+ax3.set_ylim([0, 1.5])
+ax3.grid()
+ax3.legend()
+fig3.savefig("cdf-with-inference.png")
